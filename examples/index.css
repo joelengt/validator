@@ -1,0 +1,45 @@
+
+/* input elements */
+.input-text {
+
+}
+
+.input-number {
+
+}
+
+.input-email {
+
+}
+
+.input-dni {
+
+}
+
+.input-required {
+  /* you can used to add a pseudo element with a sign "*" */
+}
+
+/* success input */
+.input-success {
+  border: 1px solid green;
+}
+
+/* fail input */
+.input-fail {
+  border: 1px solid red;
+}
+
+/* message box */
+.box-message {
+  color: black;
+}
+
+.box-message-success {
+  color: green;
+}
+
+.box-message-fail {
+  color: red;
+}
+

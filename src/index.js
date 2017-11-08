@@ -65,20 +65,26 @@ function evaluateElements(inputList) {
       let elementContent = currentElement.val()
       if(isEmpty(elementContent)) {
         // throw error event
-
+        inputFieldIsRequired(elementContent)
       } else {
         // evaluate rules
+        inputRulesContent(elementContent)
       }
     
     } else {
       // evaluate rules
-
+      inputRulesContent(elementContent)
     }
   }
 }
 
-function inputRules() {
+function inputRulesContent(elementInput) {
 
+}
+
+function inputFieldIsRequired(elementInput) {
+  // add box-message
+  // add message
 }
 
 function main(mainBlockElementClass) {

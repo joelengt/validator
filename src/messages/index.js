@@ -1,21 +1,23 @@
+const messageRequired = 'El campo es obligatorio'
+
 const messages = {
   'input-text': {
-    'required': '',
+    'required': messageRequired,
     'success': '',
     'fail': ''
   },
   'input-number': {
-    'required': '',
+    'required': messageRequired,
     'success': '',
     'fail': ''
   },
   'input-email': {
-    'required': '',
+    'required': messageRequired,
     'success': '',
     'fail': ''
   },
   'input-dni': {
-    'required': '',
+    'required': messageRequired,
     'success': '',
     'fail': ''
   }

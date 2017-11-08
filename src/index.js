@@ -1,7 +1,10 @@
 
 import messages from './messages'
 import regexp from './regexp'
+import rulers from './rulerSchema'
+
 import $ from 'jquery'
+import Joi from 'Joi'
 
 import {isEmpty} from './utils'
 
@@ -9,31 +12,31 @@ import {isEmpty} from './utils'
 const inputsFormat = {
   'input-text'_ {
     messages: messages['input-text'],
-    regexp: regexp['input-text']
+    ruler: rulers['input-text']
   },
   'input-number'_ {
     messages: messages['input-number'],
-    regexp: regexp['input-number']
+    ruler: rulers['iinput-number']
   },
   'input-dni'_ {
     messages: messages['input-dni'],
-    regexp: regexp['input-dni']
+    ruler: rulers['input-dni']
   },
   'input-email'_ {
     messages: messages['input-email'],
-    regexp: regexp['input-email']
+    ruler: rulers['input-email']
   },
   'input-date'_ {
     messages: messages['input-date'],
-    regexp: regexp['input-date']
+    ruler: rulers['input-date']
   },
   'input-gender'_ {
     messages: messages['input-gender'],
-    regexp: regexp['input-gender']
+    ruler: rulers['input-gender']
   },
   'input-phone'_ {
     messages: messages['input-phone'],
-    regexp: regexp['input-phone']
+    ruler: rulers['input-phone']
   }
 }
 
@@ -47,6 +50,8 @@ function findOutInputElements(mainBlockElementClass, inputList) {
     let element = $(`.${mainBlockElementClass}  .${ input }`) // check only a single element <==
     if (element.length) {
       inputElementInTheBlockList[input] = element
+    } else {
+      break;
     }
   }
 
@@ -56,11 +61,15 @@ function findOutInputElements(mainBlockElementClass, inputList) {
 // Evaluate each single input Element
 function evaluateElements(inputList) {
   // Evaluate input List from DOM
+  let inputRequired = 0
+
   for(let input in inputList) {
     // the element have 'input-required' class?
     let currentElement = inputList[input]
 
     if (currentElement.hasClass('input-required')) {
+      inputRequired += 1;
+
       // the input isEmpty?
       let elementContent = currentElement.val()
       if(isEmpty(elementContent)) {
@@ -76,11 +85,50 @@ function evaluateElements(inputList) {
       inputRulesContent(currentElement, input)
     }
   }
+
+  return inputRequired
 }
 
 /* Input Rules */
-function inputRulesContent(elementInput) {
+function inputRulesContent(elementInput, input) {
+  // evaluate if the input content follow the rules
+  let inputValueContent = elementInput.val()
 
+  // input content -> pass to the ruler -> Joi
+  Joi.validate({ value: inputValueContent }, inputsFormat[input].ruler, (err, value) => {
+    // Joi say true or false
+    if (err) { // Joi say: Error/False
+      return console.log('Joi Result')
+    }
+
+    // Joi Say the value: True?
+    
+    // 1.- Remove messageBox
+    removeMessageBox(elementInput)
+
+    if (!value) { // 2.- If event fail
+        // change style input
+        inputBoxClassStatus(elementInput, false)
+
+        // add messageBox
+        addMessageBox(elementInput, inputsFormat[input].messages.fail)
+
+        // add style box
+        messageBoxClassStatus(elementInput, false)
+
+    } else { // 2.- IF event success
+
+        // change style input
+        //inputBoxClassStatus(elementInput, true)
+
+        // add messageBox
+        // addMessageBox(elementInput, inputsFormat[input].messages.success)
+
+        // add style box
+        // messageBoxClassStatus(elementInput, true)
+    }
+
+  })
 }
 
 
@@ -153,9 +201,35 @@ function inputBoxClassStatus(elementInput, statusClass) {
   }
 }
 
+function ifAllRequiredInputAreSuccess(minLimit, inputList) {
+  let inputRequiredSuccess = 0
+  // count input with success class
+  for(let input in inputList) {
+    // the element have 'input-required' class?
+    let currentElement = inputList[input]
+
+    if (currentElement.hasClass('input-required') && currentElement.hasClass('input-success')) {
+      inputRequiredSuccess += 1;
+    }
+  }
+
+  return inputRequiredSuccess
+}
+
 /* Main Function */
 function main(mainBlockElementClass) {
   let inputList = findOutInputElements(mainBlockElementClass, inputsFormat)
-  evaluateElements(inputList)
+  let minRequiredElement = evaluateElements(inputList)
+
+  // evaluate all inputs success
+  let inputRequiredSuccess = ifAllRequiredInputAreSuccess(minRequiredElement, inputList)
+
+  // Evaluate limit
+  if (Number(inputRequiredSuccess) === Number(minRequiredElement)) {
+    return true
+  } else {
+    return false
+  }
 }
 
+// export default main /* export to npm require*/

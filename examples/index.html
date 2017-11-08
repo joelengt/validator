@@ -9,21 +9,21 @@
 <body>
   <form id="main-form">
     <div>
-      <input type="text" class="input-text  input-fail  input-required"/>
+      <label for="">nombre</label>
+      <input type="text" class="input-text"/>
     </div>
 
     <div>
-      <input type="text" class="input-number  input-success  input-required"/>
+      <label for="">numero</label>
+      <input type="text" class="input-number"/>
     </div>
 
     <div>
-      <input type="text" class="input-email  input-fail  input-required"/>
-      <div class="box-message  box-message-fail">
-        <p>message text 3</p>
-      </div>
+      <label for="">email</label>
+      <input type="text" class="input-email  input-required"/>
     </div>
 
-    <button id="mainButton"></button>
+    <button id="mainButton">Enviar</button>
   </form>
   
   <script
@@ -32,7 +32,12 @@
     crossorigin="anonymous">
   </script>
   <script>
-    
+    var $btnMain = $('#mainButton')
+
+    $btnMain.click(function(event) {
+      event.preventDefault()
+      console.log('hello')
+    })
   </script>
 </body>
 </html>
